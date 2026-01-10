@@ -43,6 +43,7 @@ export function BFS(grid, src, dest) {
   return []; 
 }
 
+
 export function dijkstra(grid, startNode, finishNode) {
   const visitedNodesInOrder = [];
   startNode.dist = 0;

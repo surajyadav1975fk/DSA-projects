@@ -13,6 +13,7 @@ let finishnodecol = 40;
 function App() {
   const [grids, set] = useState([[]]);
   const [mouseIsPressed, setmouseispressed] = useState(false);
+  const [interactionMode, setInteractionMode] = useState('none');
 
   const createNode = (row,col) => {
     return {
@@ -43,7 +44,7 @@ function App() {
   function handleclickbfs(){
     const animate=BFS(grids,[startnoderow,startnodecol],[finishnoderow,finishnodecol]);
     dijkstra(grids,grids[startnoderow][startnodecol],grids[finishnoderow][finishnodecol]);
-    const path=getNodesInShortestPathOrder(grids[10][40]);
+    const path=getNodesInShortestPathOrder(grids[finishnoderow][finishnodecol]);
       for(let i=0;i<=animate.length;i++){
         if(i===animate.length){
           setTimeout(()=>{
@@ -65,9 +66,7 @@ function App() {
 
   function handleclickdij(){
       const animate=dijkstra(grids,grids[startnoderow][startnodecol],grids[finishnoderow][finishnodecol]);
-      const path=getNodesInShortestPathOrder(grids[10][40]);
-
-      // if(path.length===1) return;
+      const path=getNodesInShortestPathOrder(grids[finishnoderow][finishnodecol]);
 
       for(let i=0;i<=animate.length;i++){
         if(i===animate.length){
@@ -101,8 +100,14 @@ function App() {
   }
 
   function handleclicknode(row,col){
-    startnoderow=row;
-    startnodecol=col;
+    if(interactionMode=='start'){
+      startnoderow=row;
+      startnodecol=col;
+    }
+    else if(interactionMode=='end'){
+      finishnoderow = row;
+      finishnodecol = col;
+    }
     creategrid()
   }
 
@@ -124,14 +129,14 @@ function App() {
     setmouseispressed(false);
   }
 
-  function handledbleclick(row,col){
-    console.log(row,col);
+  function handlemodechange(event){
+    setInteractionMode(event.target.value);
   }
 
   return (
     <>
       <div className="w-full h-full fixed flex flex-col justify-center items-center">
-        <Nav handleclickbfs={handleclickbfs} handleclickdij={handleclickdij} creategrid={creategrid}></Nav>
+        <Nav handleclickbfs={handleclickbfs} handleclickdij={handleclickdij} creategrid={creategrid} handlemodechange={handlemodechange} ></Nav>
         <div className="flex justify-center items-center p-5 matrix w-full h-full ">
           <Grid 
           grids={grids} 
